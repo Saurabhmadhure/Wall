@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
-import DashboardItem from "./DashboardItem";
+
+function simulateNetworkRequest() {
+  return new Promise((resolve) => setTimeout(resolve, 2000));
+}
 
 const DepositForm = ({ userDetails, handleDepositSuccess }) => {
   const [data, setData] = useState({
@@ -19,7 +23,7 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
     setData({ ...data, [name]: value });
   };
   const accountNumber = userDetails?.accNo;
-  console.log(userDetails?.accNo);
+
   const amountVar = data.amount;
 
   const requestData = {
@@ -30,9 +34,9 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
   const handleSubmit = async (event) => {
     setIsSubmitting(true);
     event.preventDefault();
-    console.log(event);
+
     const jwtToken = userDetails?.token;
-    console.log(userDetails?.token);
+
     const headers = {
       Authorization: `Bearer ${jwtToken}`,
       "Content-Type": "application/json",
@@ -44,10 +48,7 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
           headers,
         })
         .then((response) => {
-          console.log(response);
-          console.log(response.data);
           handleDepositSuccess(response.data);
-          localStorage.setItem("balance", response);
           setBalance(response.data);
         })
         .catch((error) => {
@@ -62,6 +63,18 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
     }
     setIsSubmitting(false);
   };
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isLoading) {
+      simulateNetworkRequest().then(() => {
+        setLoading(false);
+      });
+    }
+  }, [isLoading]);
+
+  const handleClick = () => setLoading(true);
+
   return (
     <>
       <Form bg="dark" variant="dark">
@@ -75,9 +88,14 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
           />
         </Form.Group>
         <br />
-        <button type="button" onClick={handleSubmit} disabled={isSubmitting}>
-          Deposit
-        </button>
+        <Button
+          variant="primary"
+          disabled={isLoading}
+          onClick={!isLoading ? handleSubmit : null}
+          // onClick={handleSubmit}
+        >
+          {isLoading ? "Depositing..." : "Deposit"}
+        </Button>
       </Form>
       <ToastContainer theme="dark" />
     </>

@@ -11,32 +11,29 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
   const [account, setAccount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [signModalShow, setSignModalShow] = useState(false);
+
   useEffect(() => {
-    var storedData = localStorage.getItem("accDetails");
     // console.log(props.userDetails?.user.name);
     var name = userDetails?.user.name;
-    const handleUserInfo = (user) => {
-      setUname(user.name);
-      // other code to handle user information
-    };
     setUname(name);
-
-    var acNo = localStorage.getItem("account");
+    var acNo = userDetails?.accNo;
     setAccount(acNo);
-  }, []);
+  }, [userDetails]);
 
-  // useEffect(() => {
-  //   if (account === 0) {
-  //     setAccount(0);
-  //     return;
-  //   }
-  // }, [account]);
   const Logout = () => {
     localStorage.clear();
 
     window.location.href = "/";
     toast.success("Successfully Logged Out");
   };
+
+  localStorage.setItem("userName", uname);
+  useEffect(() => {
+    const savedName = localStorage.getItem("userName");
+    if (savedName) {
+      setUname(savedName);
+    }
+  }, []);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark rounded-2">

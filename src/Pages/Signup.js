@@ -8,10 +8,9 @@ import Form from "react-bootstrap/Form";
 import ErrorModal from "../ErrorModels/ErrorModel";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "react-bootstrap";
+import { CloseButton, Modal } from "react-bootstrap";
 
 function Signup({ handleUserInfo, onHide, ...props }) {
-  const [account, setAccount] = useState("");
   // const [handleOtpSubmit, setHandleOtpSubmit] = useState(null);
   // const [showOTPModal, setShowOTPModal] = useState(false);
   const [user, setUser] = useState({
@@ -69,7 +68,7 @@ function Signup({ handleUserInfo, onHide, ...props }) {
         var res = response;
         console.log(res);
         handleUserInfo(response);
-        setAccount(response.accNo);
+
         // var responseOtp = response.otp;
         // console.log(responseOtp);
 
@@ -80,7 +79,6 @@ function Signup({ handleUserInfo, onHide, ...props }) {
         //   console.log(Number(generatedOtp) === Number(responseOtp));
         //   console.log(generatedOtp);
         // if (responseOtp === generatedOtp) {
-        localStorage.setItem("isVerified", true);
         toast.success("Succesfully Signed in");
         console.log(response);
         // console.log("OTP submitted: ", generatedOtp);
@@ -89,10 +87,9 @@ function Signup({ handleUserInfo, onHide, ...props }) {
 
         localStorage.setItem("token", response.token);
         localStorage.setItem("account", response.accNo);
-        localStorage.setItem("username", response.user.name);
+
         console.log(response.user.details.name);
-        localStorage.setItem("balance", response.balance);
-        localStorage.setItem("accDetails", JSON.stringify(response));
+
         // props.onSignupSuccess();
         // props.show(false);
         navigate("/");
@@ -102,14 +99,6 @@ function Signup({ handleUserInfo, onHide, ...props }) {
 
           password: "",
         });
-
-        // }
-        // else {
-        //   toast.error("Invalid OTP");
-        // }
-        // // };
-        // setGeneratedOtp(response.otp);
-        // setHandleOtpSubmit(() => handleOtpSubmit);
       })
       .catch((error) => {
         toast.error("Something Went Wrong");
@@ -130,7 +119,6 @@ function Signup({ handleUserInfo, onHide, ...props }) {
         />
       )}
 
-      <h1 align="center">Register Here</h1>
       <Form bg="dark" variant="dark" onSubmit={submitData}>
         <Form.Group className="mb-1">
           <Form.Label>Name</Form.Label>
@@ -171,7 +159,6 @@ function Signup({ handleUserInfo, onHide, ...props }) {
           Reset
         </Button>
       </Form>
-
       <ToastContainer theme="dark" />
       {/* <Modal
         show={showOTPModal}

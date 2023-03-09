@@ -18,22 +18,24 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
   const [showDepositContainer, setShowDepositContainer] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
+  var balancefetched = localStorage.getItem("balance");
+  // setBalance(balancefetched);
 
   var acNo = userDetails?.accNo;
+  var jwtToken = userDetails?.token;
+
+  const headers = {
+    Authorization: `Bearer ${jwtToken}`,
+    "Content-Type": "application/json",
+  };
 
   const balAvailable = async () => {
-    var jwtToken = userDetails?.token;
-
-    const headers = {
-      Authorization: `Bearer ${jwtToken}`,
-      "Content-Type": "application/json",
-    };
-
     try {
       const response = await axios.get(
         `http://localhost:8080/api/v1/all/acc/${acNo}`,
         { headers }
       );
+      console.log(response);
 
       setBalance(response);
       setShowDepositContainer(false);
@@ -42,34 +44,18 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
       console.log(error);
     }
   };
-  // useEffect(() => {
-  //   balAvailable();
-  // }, []);
 
-  const handleClick = () => {
-    navigate("/home/transaction");
-  };
   const errorHandler = () => {
     setModalOpen(false);
   };
   const handleDepositClick = () => {
     setShowDepositContainer(!showDepositContainer);
   };
-  const toggleBalance = () => {
-    setShowBalance(!showBalance);
-  };
 
   const handleBalanceUpdate = async (updatedBalance) => {
     setBalance(updatedBalance);
     setShowDepositContainer(false);
     toast.success("Amount deposited successfully");
-
-    // Retrieve the updated balance from the server
-    const jwtToken = localStorage.getItem("token");
-    const headers = {
-      Authorization: `Bearer ${jwtToken}`,
-      "Content-Type": "application/json",
-    };
 
     try {
       const response = await axios.get(
@@ -83,8 +69,16 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
       toast.error("Failed to retrieve updated balance");
     }
   };
+  useEffect(() => {
+    if (userDetails) {
+      balAvailable();
+    }
+  }, [userDetails]);
   const handleDepositSuccess = (data) => {
     setBalance(data);
+  };
+  const handleClick = () => {
+    navigate("/home/transaction");
   };
 
   return (
@@ -99,27 +93,25 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
             </h3>
           </div>
           <div className="col-lg-4 col-md-3 col-6 text-center">
-            <Button variant="secondary" onClick={(balAvailable, toggleBalance)}>
+            <Button
+              variant="secondary"
+              onClick={() => setShowBalance(!showBalance)}>
               {showBalance ? "Hide Balance" : "Show Balance"}
             </Button>
+
             {showBalance && <h1>₹{balance}</h1>}
           </div>
           <div className="d-grid gap-10 col-4 mx-auto">
             <ul className="list-group">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleClick}>
-                View Transactions
-              </button>
+              <Button variant="outline-primary" onClick={handleClick}>
+                {" "}
+                View Transactions{" "}
+              </Button>
 
               <ul className="list-group">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={handleDepositClick}>
+                <Button variant="outline-success" onClick={handleDepositClick}>
                   Deposit Amount
-                </button>
+                </Button>
               </ul>
               {showDepositContainer && (
                 <DepositForm
@@ -128,14 +120,14 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
                   balanceAvailable={balanceAvailable}
                 />
               )}
-              <button
-                type="button"
-                className="btn btn-success"
+              <Button
+                variant="outline-dark"
                 onClick={() => {
                   setModalOpen(true);
                 }}>
+                {" "}
                 Send Money
-              </button>
+              </Button>
             </ul>
           </div>
         </div>
@@ -148,7 +140,9 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
             title="Send Money"
             setOpenModal={setModalOpen}
             onConfirm={errorHandler}>
-            <SendMoneyForm setOpenModal={setModalOpen}>
+            <SendMoneyForm
+              setOpenModal={setModalOpen}
+              userDetails={userDetails}>
               Send Money
             </SendMoneyForm>
           </Modal>

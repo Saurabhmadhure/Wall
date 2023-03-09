@@ -4,14 +4,14 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Form } from "react-bootstrap";
-const SendMoneyForm = () => {
+const SendMoneyForm = ({ userDetails }) => {
   const [senderId, setSenderId] = useState("");
   const [receiverId, setReceiverId] = useState();
   const [amount, setAmount] = useState(null);
   const [cashback, setCashback] = useState("");
 
   const handleSubmit = (event) => {
-    var accountNo = localStorage.getItem("account");
+    var accountNo = userDetails?.accNo;
     console.log(accountNo);
     const data = {
       sid: accountNo,
@@ -19,7 +19,7 @@ const SendMoneyForm = () => {
       amount: amount,
     };
     console.log(data);
-    const jwtToken = localStorage.getItem("token");
+    var jwtToken = userDetails?.token;
 
     const headers = {
       Authorization: `Bearer ${jwtToken}`,

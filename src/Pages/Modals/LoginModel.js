@@ -44,14 +44,15 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
         handleUserInfo(token);
         // console.log(props.handleUserInfo(token));
         setName(token.user.name);
-        localStorage.setItem("token", token.token);
+        localStorage.setItem("tokens", token?.token);
 
-        localStorage.setItem("username", token.user.name);
+        localStorage.setItem("username", token?.user.name);
+        console.log(token);
 
-        localStorage.setItem("account", token.accNo);
+        localStorage.setItem("accounts", token?.accNo);
 
         const navigate = Navigate;
-        navigate("/");
+        // navigate("/");
 
         // toast.success("Enter The Token received on Entered Mail");
         setData({
@@ -59,7 +60,7 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
           password: "",
         });
         handleModalClose();
-        navigate("/");
+        // navigate("/");
       })
       .catch((error) => {
         if (error.response.status === 403 || error.response.status === 400) {

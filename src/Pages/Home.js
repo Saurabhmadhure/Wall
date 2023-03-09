@@ -24,7 +24,7 @@ const Home = () => {
   };
   return (
     <>
-      <Base handleUserInfo={handleUserInfo} />
+      <Base handleUserInfo={handleUserInfo} userDetails={userInfo} />
       <UserDashboard userDetails={userInfo} />
       <Outlet />
     </>

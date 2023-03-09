@@ -64,52 +64,39 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
 
       signUps(user)
         .then((response) => {
-          doLogin(response, () => {});
-          console.log(response);
-          console.log();
-          setAccount(response.accNo);
-          console.log(account);
-          seVerifyOtp(response.otp);
-          setResponseData(response);
-          // seMailOtp(response.otp);
+          if (response && response.balance === 0) {
+            doLogin(response, () => {});
+            console.log(response);
+            localStorage.setItem("token", response?.token);
+            localStorage.setItem("balance", response?.balance);
+            localStorage.setItem("account", response?.accNo);
+            console.log();
+            setAccount(response.accNo);
+            console.log(account);
+            seVerifyOtp(response.otp);
+            setResponseData(response);
 
-          // handleGenOtpChange(response.otp);
+            var responseOtp = response.otp;
 
-          var responseOtp = response.otp;
-          console.log(responseOtp);
-          setShowOTPModal(true);
-          localStorage.setItem("token", response.token);
-          localStorage.setItem("account", response.accNo);
-          localStorage.setItem("username", response.user.name);
-          console.log(response.user.details.name);
-          localStorage.setItem("balance", response.balance);
-          localStorage.setItem("accDetails", JSON.stringify(response));
-          props.onSignupSuccess();
-          props.show(false);
-          toast.success("Succesfully Signed in");
-          navigate("/");
-          setUser({
-            name: "",
-            email: "",
-            password: "",
-          });
-
-          handleModalClose();
+            setUser({
+              name: "",
+              email: "",
+              password: "",
+            });
+            setShowOTPModal(true);
+          } else {
+            if (error && error.status === 400) {
+              toast.error("Something went wrong, please try again later");
+            } else {
+              toast.error(
+                "This Email Id is Already Present Please Try Another One"
+              );
+            }
+          }
         })
 
         .catch((error) => {
-          if (error && error.status === 400) {
-            toast.error("Something went wrong, please try again later");
-          }
-          //  else if (
-          //   error.message === "Network Error" ||
-          //   error.response.status === 404
-          // )
-          // {
-          //   toast.error(
-          //     "This Email Id is Already Present Please Try Another One"
-          //   );
-          // }
+          console.log(error);
         });
     } catch (error) {
       console.log(error);
@@ -129,20 +116,12 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
       .then((otpResponse) => {
         console.log(otpResponse);
         if (otpResponse.data === true) {
-          toast.success("Succesfully Entered");
-          console.log(responseData);
-          console.log(otp);
-          console.log(verifyOtp);
-          console.log(otpResponse);
-          console.log(otpResponse);
-          console.log("OTP submitted: ", otp);
+          toast.success("Succesfully Signed in");
 
           toast.success("User is Registered");
-          console.log(otpResponse);
-          console.log("verified");
-          console.log(responseData);
+
           handleUserInfo(responseData);
-          console.log(responseData);
+
           setShowOTPModal(false);
           onHide();
         } else if (otpResponse.data === false) {
@@ -175,7 +154,7 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
         />
       )}
 
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
           Register Yourself
         </Modal.Title>
@@ -223,8 +202,6 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
           </Button>
         </Form>
 
-        <ToastContainer theme="dark" />
-
         {/* <Signup onSignupSuccess={handleSignupSuccess} /> */}
         <Modal
           show={showOTPModal}
@@ -256,6 +233,7 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
       <Modal.Footer>
         <Button onClick={onHide}>Close</Button>
       </Modal.Footer>
+      <ToastContainer theme="dark" />
     </Modal>
   );
 };
