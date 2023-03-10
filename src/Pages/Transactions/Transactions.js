@@ -7,6 +7,7 @@ import "./Transaction.css";
 const Transaction = () => {
   const [transactions, setTransactions] = useState([]);
   const jwtToken = localStorage.getItem("tokens");
+  console.log(jwtToken);
 
   const headers = {
     Authorization: `Bearer ${jwtToken}`,

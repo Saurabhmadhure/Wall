@@ -44,7 +44,7 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
         handleUserInfo(token);
         // console.log(props.handleUserInfo(token));
         setName(token.user.name);
-        localStorage.setItem("tokens", token?.token);
+        localStorage.setItem("tokens", token.token);
 
         localStorage.setItem("username", token?.user.name);
         console.log(token);

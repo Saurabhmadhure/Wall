@@ -19,7 +19,7 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
   const [responseData, setResponseData] = useState(null);
   const [otp, setOtp] = useState(null);
   const [account, setAccount] = useState(null);
-
+  const [count, setCount] = useState(0);
   const [verifyOtp, seVerifyOtp] = useState(null);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [user, setUser] = useState({
@@ -114,19 +114,23 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
       .then((otpResponse) => {
         console.log(otpResponse);
         if (otpResponse.data === true) {
+          setCount(0);
           toast.success("Succesfully Signed in");
 
           toast.success("User is Registered");
 
           handleUserInfo(responseData);
-
+          setOtp("");
           setShowOTPModal(false);
           onHide();
-        } else if (otpResponse.data === false) {
-          toast.error("Invalid Otp");
-          console.log("we are in else Part");
-          setOtp = "";
+        } else {
+          if (count < 2) {
+            toast.error("Invalid Otp. Please try again");
+            setCount(count + 1);
+            setOtp("");
+          }
         }
+
         // if(otpResponse==true)
       });
   };
