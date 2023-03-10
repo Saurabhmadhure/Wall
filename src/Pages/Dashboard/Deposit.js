@@ -49,6 +49,7 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
         })
         .then((response) => {
           handleDepositSuccess(response.data);
+          localStorage.setItem("balance", response);
           setBalance(response.data);
         })
         .catch((error) => {

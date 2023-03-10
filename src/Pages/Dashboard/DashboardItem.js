@@ -39,6 +39,7 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
 
       setBalance(response);
       setShowDepositContainer(false);
+      setBalanceAvailable(true);
       setBalance(response.data);
     } catch (error) {
       console.log(error);
@@ -51,7 +52,12 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
   const handleDepositClick = () => {
     setShowDepositContainer(!showDepositContainer);
   };
-
+  const handleBalanceClick = async () => {
+    setShowBalance(!showBalance);
+    if (!balanceAvailable) {
+      await balAvailable();
+    }
+  };
   const handleBalanceUpdate = async (updatedBalance) => {
     setBalance(updatedBalance);
     setShowDepositContainer(false);
@@ -63,7 +69,7 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
         { headers }
       );
       console.log(response);
-      setBalance(response);
+      setBalance(response.data.balance);
     } catch (error) {
       console.log(error);
       toast.error("Failed to retrieve updated balance");
@@ -77,8 +83,9 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
   const handleDepositSuccess = (data) => {
     setBalance(data);
   };
+
   const handleClick = () => {
-    navigate("/home/transaction");
+    navigate("/home/transaction", { state: { userDetails: userDetails } });
   };
 
   return (
@@ -101,7 +108,7 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
 
             {showBalance && <h1>₹{balance}</h1>}
           </div>
-          <div className="d-grid gap-10 col-4 mx-auto">
+          <div className="d-grid gap-9 col-3 mx-auto">
             <ul className="list-group">
               <Button variant="outline-primary" onClick={handleClick}>
                 {" "}

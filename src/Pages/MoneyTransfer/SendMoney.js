@@ -31,14 +31,20 @@ const SendMoneyForm = ({ userDetails }) => {
         headers,
       })
       .then((response) => {
-        console.log(response.data.cashback);
-        toast.success(response.data.cashback);
-        var cashb = response.data.cashback;
-        setCashback(cashb);
-
+        if (response && response.status === 200) {
+          console.log(response);
+          console.log(response.data.cashback);
+          toast.success(response.data.cashback);
+          var cashb = response.data.cashback;
+          setCashback(cashb);
+        } else {
+          console.error();
+          console.log(response);
+        }
         // toast.success(cashb);
       })
       .catch((error) => {
+        console.log(error);
         if (error.response.data === "NotSufficientBalance") {
           toast.error("Not enough balance");
         } else if (error.response && error.response.status === 403) {

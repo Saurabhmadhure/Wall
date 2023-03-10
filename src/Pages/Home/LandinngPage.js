@@ -1,13 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
 
 function HomePage() {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/home");
+  };
   return (
     <div className="home-container">
       <div className="home-content">
-        <h1>Welcome to WalletBanking</h1>
+        <h1>Welcome to Walleto</h1>
         <p>Your One-Stop Solution for All Your Financial Needs</p>
-        <button>Learn More</button>
+        <button onClick={handleButtonClick}>Acces your walleto</button>
       </div>
     </div>
   );

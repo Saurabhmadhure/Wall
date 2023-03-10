@@ -67,9 +67,7 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
           if (response && response.balance === 0) {
             doLogin(response, () => {});
             console.log(response);
-            localStorage.setItem("token", response?.token);
-            localStorage.setItem("balance", response?.balance);
-            localStorage.setItem("account", response?.accNo);
+            localStorage.setItem("token", response.token);
             console.log();
             setAccount(response.accNo);
             console.log(account);

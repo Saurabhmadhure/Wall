@@ -64,7 +64,7 @@ const UserDashboard = ({ userDetails, walletBalance }) => {
             <br />
             <div className="card text-center">
               <div className="card-header bg-secondary text-white">
-                <h1>WelCome {userDetails?.user.name}</h1>
+                <h1>Welcome {userDetails?.user.name}</h1>
               </div>
             </div>
             <hr />

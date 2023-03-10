@@ -40,9 +40,9 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
       <div className="container-fluid  d-flex align-items-center">
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
           <li className="nav-item">
-            <a className="nav-link mt-1" href="/">
+            <a className="nav-link mt-1" href="/home">
               <strong>
-                <h2>Wallet</h2>
+                <h2>Walleto</h2>
               </strong>{" "}
             </a>
           </li>

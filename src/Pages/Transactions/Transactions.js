@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
 import Container from "react-bootstrap/esm/Container";
+import Card from "../../Component/Card";
 import NavigationBar from "../AfterLoginNavigationBar";
 import "./Transaction.css";
 
