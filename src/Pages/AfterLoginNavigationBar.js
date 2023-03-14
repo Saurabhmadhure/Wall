@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import SignInModel from "./Modals/SignInModal";
 import LoginModel from "./Modals/LoginModel";
@@ -13,8 +13,7 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
   const [signModalShow, setSignModalShow] = useState(false);
 
   useEffect(() => {
-    // console.log(props.userDetails?.user.name);
-    var name = userDetails?.user.name;
+    var name = userDetails?.name;
     setUname(name);
     var acNo = userDetails?.accNo;
     setAccount(acNo);
@@ -70,8 +69,8 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
 
           <LoginModel
             handleUserInfo={(user) => {
-              setUname(user.user.name);
-              console.log(user);
+              setUname(user.name);
+
               handleUserInfo(user);
             }}
             show={modalShow}
@@ -79,7 +78,7 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
           />
           <SignInModel
             handleUserInfo={(user) => {
-              setUname(user.user.name);
+              setUname(user.name);
               console.log(user);
               handleUserInfo(user);
             }}
@@ -87,6 +86,7 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
             onHide={() => setSignModalShow(false)}
           />
         </Navbar.Collapse>
+        <ToastContainer theme="dark" />
       </div>
     </nav>
   );

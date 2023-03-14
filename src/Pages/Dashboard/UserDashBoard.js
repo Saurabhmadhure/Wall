@@ -13,33 +13,20 @@ const UserDashboard = ({ userDetails, walletBalance }) => {
 
   useEffect(() => {
     var name = userDetails?.user.name;
-    console.log(userDetails);
-    console.log(userDetails?.user.name);
 
     var acNo = userDetails?.accNo;
     setAccountNo(acNo);
   }, []);
-  console.log(userDetails?.accNo);
 
   useEffect(() => {
     if (idelBalance === 0) {
       setBalance(0);
       return;
     }
-    const jwtToken = userDetails?.token;
-
-    const headers = {
-      Authorization: `Bearer ${jwtToken}`,
-      "Content-Type": "application/json",
-    };
-    console.log(jwtToken);
 
     axios
-      .get(`http://localhost:8080/api/v1/all/acc/${accountNo}`, accountNo, {
-        headers,
-      })
+      .get(`http://localhost:8080/users/acc/${accountNo}`, accountNo)
       .then((response) => {
-        console.log("avai bal" + response.data);
         var balance = response.data;
 
         console.log(balance);
@@ -64,7 +51,7 @@ const UserDashboard = ({ userDetails, walletBalance }) => {
             <br />
             <div className="card text-center">
               <div className="card-header bg-secondary text-white">
-                <h1>Welcome {userDetails?.user.name}</h1>
+                <h1>Welcome {userDetails?.name}</h1>
               </div>
             </div>
             <hr />

@@ -13,9 +13,11 @@ const Transaction = () => {
     Authorization: `Bearer ${jwtToken}`,
     "Content-Type": "application/json",
   };
+  var accNo = localStorage.getItem("accounts");
+  console.log(accNo);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/all/transactions/", { headers })
+    fetch(`http://localhost:8080/users/transaction/${accNo}`, { headers })
       .then((response) => response.json())
       .then((data) => setTransactions(data))
       .catch((error) => console.log(error));

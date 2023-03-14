@@ -19,8 +19,8 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
   const [responseData, setResponseData] = useState(null);
   const [otp, setOtp] = useState(null);
   const [account, setAccount] = useState(null);
-  const [count, setCount] = useState(0);
   const [verifyOtp, seVerifyOtp] = useState(null);
+  const [email, setEmail] = useState("");
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [user, setUser] = useState({
     name: "",
@@ -67,21 +67,33 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
           if (response && response.balance === 0) {
             doLogin(response, () => {});
             console.log(response);
-            localStorage.setItem("token", response.token);
+            localStorage.setItem("tokens", response.token);
+            localStorage.setItem("accounts", response?.accNo);
+            console.log(response.otp);
+
             console.log();
+            setEmail(response.email);
             setAccount(response.accNo);
             console.log(account);
             seVerifyOtp(response.otp);
             setResponseData(response);
 
-            var responseOtp = response.otp;
+            console.log(email);
 
             setUser({
               name: "",
               email: "",
               password: "",
             });
+            toast.success("Otp has been Sent To your Registered Email");
             setShowOTPModal(true);
+            console.log(email);
+            const sendMail = {
+              to: response.email,
+              otp: response.otp,
+            };
+            console.log(sendMail);
+            axios.post("http://localhost:8080/reg/sendmail", sendMail);
           } else {
             if (error && error.status === 400) {
               toast.error("Something went wrong, please try again later");
@@ -106,7 +118,7 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
 
     console.log(otp);
     axios
-      .post("http://localhost:8080/api/v1/reg/verify", {
+      .post("http://localhost:8080/reg/verify", {
         generatedOTP: verifyOtp,
         userEnteredOTP: otp,
         accNumber: account,
@@ -114,24 +126,16 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
       .then((otpResponse) => {
         console.log(otpResponse);
         if (otpResponse.data === true) {
-          setCount(0);
-          toast.success("Succesfully Signed in");
-
-          toast.success("User is Registered");
+          toast.success("Succesfully Registered");
 
           handleUserInfo(responseData);
           setOtp("");
           setShowOTPModal(false);
           onHide();
         } else {
-          if (count < 2) {
-            toast.error("Invalid Otp. Please try again");
-            setCount(count + 1);
-            setOtp("");
-          }
+          setOtp("");
+          toast.error("Invalid Otp. Please try again");
         }
-
-        // if(otpResponse==true)
       });
   };
   const errorHandler = () => {

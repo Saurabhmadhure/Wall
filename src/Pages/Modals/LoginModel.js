@@ -1,9 +1,8 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { Fragment, useEffect, useState } from "react";
+import { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { Navigate, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { doLogin } from "../../Component/Auth/Index";
 import Card from "../../Component/Card";
@@ -14,8 +13,6 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
     email: "",
     password: "",
   });
-  const [name, setName] = useState("");
-  const [signModalShow, setSignModalShow] = useState(false);
   const [modalShow, setModalShow] = useState(false);
 
   const handleChange = (event, field) => {
@@ -24,7 +21,6 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log(data);
 
     if (data.email.trim().length === 0) {
       toast.error("Email is Empty");
@@ -40,39 +36,30 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
         doLogin(jwtTokenData, () => {});
 
         var token = jwtTokenData;
-        console.log(token);
-        handleUserInfo(token);
-        // console.log(props.handleUserInfo(token));
-        setName(token.user.name);
-        localStorage.setItem("tokens", token.token);
 
-        localStorage.setItem("username", token?.user.name);
+        handleUserInfo(token);
+        localStorage.setItem("tokens", token?.token);
+
+        localStorage.setItem("username", token.name);
         console.log(token);
 
         localStorage.setItem("accounts", token?.accNo);
 
-        const navigate = Navigate;
-        // navigate("/");
-
-        // toast.success("Enter The Token received on Entered Mail");
-        setData({
-          email: "",
-          password: "",
-        });
+        setData({ email: "", password: "" });
         handleModalClose();
-        // navigate("/");
       })
       .catch((error) => {
         if (error.response.status === 403 || error.response.status === 400) {
           toast.error("Insert a Valid Email and Password");
+          setData({ email: "", password: "" });
         } else {
           toast.error("Something Went Wrong !!");
+          setData({ email: "", password: "" });
         }
       });
   };
   const handleModalClose = () => {
     setModalShow(false);
-    setSignModalShow(false);
   };
 
   return (

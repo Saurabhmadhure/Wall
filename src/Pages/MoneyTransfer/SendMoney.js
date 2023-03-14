@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Form } from "react-bootstrap";
+
 const SendMoneyForm = ({ userDetails }) => {
   const [senderId, setSenderId] = useState("");
   const [receiverId, setReceiverId] = useState();
@@ -11,25 +12,24 @@ const SendMoneyForm = ({ userDetails }) => {
   const [cashback, setCashback] = useState("");
 
   const handleSubmit = (event) => {
-    var accountNo = userDetails?.accNo;
-    console.log(accountNo);
+    var accountNo = userDetails.accNo;
+
     const data = {
       sid: accountNo,
       rid: receiverId,
       amount: amount,
     };
-    console.log(data);
-    var jwtToken = userDetails?.token;
+    const jwtToken = userDetails.token;
+    console.log(jwtToken);
 
     const headers = {
       Authorization: `Bearer ${jwtToken}`,
       "Content-Type": "application/json",
     };
+
     event.preventDefault();
     axios
-      .post("http://localhost:8080/api/v1/all/login/send", data, {
-        headers,
-      })
+      .post("http://localhost:8080/users/send", data, { headers })
       .then((response) => {
         if (response && response.status === 200) {
           console.log(response);
@@ -37,23 +37,14 @@ const SendMoneyForm = ({ userDetails }) => {
           toast.success(response.data.cashback);
           var cashb = response.data.cashback;
           setCashback(cashb);
-        } else {
-          console.error();
-          console.log(response);
         }
         // toast.success(cashb);
       })
       .catch((error) => {
         console.log(error);
-        if (error.response.data === "NotSufficientBalance") {
-          toast.error("Not enough balance");
-        } else if (error.response && error.response.status === 403) {
-          toast.error("Please Enter Valid Account Number!!");
-          // } else if (error.response && error.response.status === 403) {
-          //   toast.error("Something Went Wrong");
-        } else {
-          toast.error("Something went Wrong please Login Again");
-        }
+        console.log(error.response);
+
+        toast.error("Something Went Wrong");
       });
   };
 
@@ -82,7 +73,6 @@ const SendMoneyForm = ({ userDetails }) => {
           Send
         </Button>
       </Form>
-      <ToastContainer theme="dark" />
     </>
   );
 };

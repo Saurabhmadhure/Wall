@@ -1,10 +1,11 @@
 import NavigationBar from "../AfterLoginNavigationBar";
+import TransactionNavbar from "./TransactionNavbar";
 import Transaction from "./Transactions";
 
 const AllTransaction = () => {
   return (
     <>
-      <NavigationBar />
+      <TransactionNavbar />
       <Transaction />
     </>
   );

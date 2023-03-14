@@ -22,7 +22,7 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
   // setBalance(balancefetched);
 
   var acNo = userDetails?.accNo;
-  var jwtToken = userDetails?.token;
+  const jwtToken = userDetails?.token;
 
   const headers = {
     Authorization: `Bearer ${jwtToken}`,
@@ -32,10 +32,9 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
   const balAvailable = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/v1/all/acc/${acNo}`,
+        `http://localhost:8080/users/acc/${acNo}`,
         { headers }
       );
-      console.log(response);
 
       setBalance(response);
       setShowDepositContainer(false);
@@ -55,7 +54,19 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
   const handleBalanceClick = async () => {
     setShowBalance(!showBalance);
     if (!balanceAvailable) {
-      await balAvailable();
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/users/acc/${acNo}`,
+          {
+            headers,
+          }
+        );
+        console.log(response);
+        setBalance(response.data.balance);
+        setBalanceAvailable(true);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   const handleBalanceUpdate = async (updatedBalance) => {
@@ -94,19 +105,16 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
         <div className="row">
           <div className="col-lg-4 col-md-3 col-6">
             <h5>Account Number:</h5>
-            <h3>
-              {" "}
+            <h2>
               <strong>{acNo}</strong>
-            </h3>
+            </h2>
           </div>
           <div className="col-lg-4 col-md-3 col-6 text-center">
-            <Button
-              variant="secondary"
-              onClick={() => setShowBalance(!showBalance)}>
+            <Button variant="secondary" onClick={handleBalanceClick}>
               {showBalance ? "Hide Balance" : "Show Balance"}
             </Button>
 
-            {showBalance && <h1>₹{balance}</h1>}
+            {showBalance && <h2>₹{balance}</h2>}
           </div>
           <div className="d-grid gap-9 col-3 mx-auto">
             <ul className="list-group">

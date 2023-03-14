@@ -22,20 +22,20 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
     const { name, value } = event.target;
     setData({ ...data, [name]: value });
   };
+
   const accountNumber = userDetails?.accNo;
 
   const amountVar = data.amount;
 
   const requestData = {
-    uid: accountNumber,
+    uid: userDetails?.accNo,
     amount: amountVar,
   };
 
   const handleSubmit = async (event) => {
     setIsSubmitting(true);
     event.preventDefault();
-
-    const jwtToken = userDetails?.token;
+    const jwtToken = userDetails.token;
 
     const headers = {
       Authorization: `Bearer ${jwtToken}`,
@@ -44,7 +44,7 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
 
     if (data.amount > 0) {
       axios
-        .post("http://localhost:8080/api/v1/all/login/", requestData, {
+        .post("http://localhost:8080/users/deposit", requestData, {
           headers,
         })
         .then((response) => {
@@ -53,6 +53,7 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
           setBalance(response.data);
         })
         .catch((error) => {
+          console.log(error);
           if ((error.response.status = 404)) {
             toast.error("Decimal Value Not Allowed");
           } else {
