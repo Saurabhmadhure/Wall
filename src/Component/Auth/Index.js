@@ -7,6 +7,10 @@ export const doLogin = (data, next) => {
   localStorage.setItem("data", JSON.stringify(data));
   next();
 };
+export const doSignup = (data, next) => {
+  localStorage.setItem("data", JSON.stringify(data));
+  next();
+};
 
 export const doLogout = (next) => {
   localStorage.removeItem("data");

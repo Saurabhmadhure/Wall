@@ -4,7 +4,6 @@ import Modal from "react-bootstrap/Modal";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { toast, ToastContainer } from "react-toastify";
-import { doLogin } from "../../Component/Auth/Index";
 import Card from "../../Component/Card";
 import { loginUser } from "../../Services/user-Service";
 
@@ -33,18 +32,15 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
 
     loginUser(data)
       .then((jwtTokenData) => {
-        doLogin(jwtTokenData, () => {});
+        // doLogin(jwtTokenData, () => {});
 
         var token = jwtTokenData;
 
         handleUserInfo(token);
         localStorage.setItem("tokens", token?.token);
-
-        localStorage.setItem("username", token.name);
-        console.log(token);
-
+        localStorage.setItem("userName", token.name);
+        toast.success("Succesfully Logged in");
         localStorage.setItem("accounts", token?.accNo);
-
         setData({ email: "", password: "" });
         handleModalClose();
       })
@@ -74,9 +70,13 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
       <Modal.Body>
         <Card>
           <h1 align="center">Login Here</h1>
+          <br />
+
           <Form bg="dark" variant="dark" onSubmit={handleFormSubmit}>
             <Form.Group className="mb-1">
-              <Form.Label>Email address</Form.Label>
+              <Form.Label>
+                <h5>Email address</h5>
+              </Form.Label>
               <Form.Control
                 type="email"
                 placeholder="Enter email"
@@ -85,7 +85,9 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
               />
             </Form.Group>
             <Form.Group className="mb-1">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>
+                <h5>Password</h5>
+              </Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Password"
@@ -100,7 +102,18 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
           </Form>
         </Card>
 
-        <ToastContainer theme="dark" />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={onHide}>Close</Button>

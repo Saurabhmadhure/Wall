@@ -1,13 +1,13 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+
 import Home from "./Pages/Home";
 import Dashboard from "./Pages/Dashboard/UserDashBoard";
 import Profile from "./Pages/Profile";
-import CreateWallet from "./Pages/CreateWallet/CreateWallet";
 import AllTransaction from "./Pages/Transactions/AllTransaction";
 import SendMoney from "./Pages/MoneyTransfer/SendMoney";
-import BeforeLoginNavigationBar from "./Pages/BeforeLoginNavigationBar";
 import HomePage from "./Pages/Home/LandinngPage";
+import OTP from "./Pages/OTP";
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
           <Route path="send" element={<SendMoney />} />
         </Route>
         <Route path="/home/transaction" element={<AllTransaction />} />
+        <Route path="/home/otp" element={<OTP />} />
         <Route path="/" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

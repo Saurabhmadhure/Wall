@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
@@ -23,12 +22,10 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
     setData({ ...data, [name]: value });
   };
 
-  const accountNumber = userDetails?.accNo;
-
   const amountVar = data.amount;
 
   const requestData = {
-    uid: userDetails?.accNo,
+    accountNo: userDetails?.accNo,
     amount: amountVar,
   };
 
@@ -44,13 +41,15 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
 
     if (data.amount > 0) {
       axios
-        .post("http://localhost:8080/users/deposit", requestData, {
+        .post("http://localhost:8080/accounts/deposit", requestData, {
           headers,
         })
         .then((response) => {
-          handleDepositSuccess(response.data);
-          localStorage.setItem("balance", response);
-          setBalance(response.data);
+          handleDepositSuccess(response.data.available_Balance);
+          toast.success("Amount Deposited");
+
+          localStorage.setItem("balance", response.data.deposited_Amount);
+          setBalance(response.data.deposited_Amount);
         })
         .catch((error) => {
           console.log(error);
@@ -99,7 +98,6 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
           {isLoading ? "Depositing..." : "Deposit"}
         </Button>
       </Form>
-      <ToastContainer theme="dark" />
     </>
   );
 };

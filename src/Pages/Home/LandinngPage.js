@@ -13,7 +13,7 @@ function HomePage() {
       <div className="home-content">
         <h1>Welcome to Walleto</h1>
         <p>Your One-Stop Solution for All Your Financial Needs</p>
-        <button onClick={handleButtonClick}>Acces your walleto</button>
+        <button onClick={handleButtonClick}>Access your walleto</button>
       </div>
     </div>
   );

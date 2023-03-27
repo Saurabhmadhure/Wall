@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 import ErrorModal from "../ErrorModels/ErrorModel";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { CloseButton, Modal } from "react-bootstrap";
+import axios from "axios";
 
 function Signup({ handleUserInfo, onHide, ...props }) {
   // const [handleOtpSubmit, setHandleOtpSubmit] = useState(null);
@@ -61,8 +61,11 @@ function Signup({ handleUserInfo, onHide, ...props }) {
       });
       return;
     }
+    // event.preventDefault();
+    axios
+      .post("http://localhost:8080/users/register", user)
 
-    signUps(user)
+      // signUps(user)
       .then((response) => {
         console.log(response);
         var res = response;
@@ -160,31 +163,6 @@ function Signup({ handleUserInfo, onHide, ...props }) {
         </Button>
       </Form>
       <ToastContainer theme="dark" />
-      {/* <Modal
-        show={showOTPModal}
-        onHide={() => setShowOTPModal(false)}
-        backdrop="static"
-        keyboard={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>Enter OTP</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleOtpSubmit}>
-            <Form.Group controlId="formBasicOTP">
-              <Form.Label>OTP</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter OTP"
-                value={generatedOtp}
-                onChange={handleOTPChange}
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal> */}
     </Container>
   );
 }

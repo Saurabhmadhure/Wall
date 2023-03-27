@@ -1,40 +1,41 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import DashboardItem from "./DashboardItem";
-import { setUserInfo } from "../Signup";
 import "./Dashboard.css";
 import "../Home.css";
 
-const UserDashboard = ({ userDetails, walletBalance }) => {
-  const [accountNo, setAccountNo] = useState(0);
-  const [idelBalance, setBalance] = useState(0);
+const UserDashboard = ({ userDetails }) => {
+  const [idelBalance, setBalance] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  useEffect(() => {
-    var name = userDetails?.user.name;
+  // useEffect(() => {
+  //   var name = userDetails?.name;
 
-    var acNo = userDetails?.accNo;
-    setAccountNo(acNo);
-  }, []);
-
+  var acNo = userDetails?.accNo;
+  //   setAccountNo(acNo);
+  // }, []);
   useEffect(() => {
     if (idelBalance === 0) {
       setBalance(0);
       return;
     }
+    const jwtToken = userDetails?.token;
+
+    const headers = {
+      Authorization: `Bearer ${jwtToken}`,
+      "Content-Type": "application/json",
+    };
 
     axios
-      .get(`http://localhost:8080/users/acc/${accountNo}`, accountNo)
+      .get(`http://localhost:8080/accounts/${acNo}`, { headers })
       .then((response) => {
         var balance = response.data;
-
-        console.log(balance);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
-  }, [accountNo]);
+  }, [acNo]);
+
   useEffect(() => {
     if (userDetails !== null && userDetails !== undefined) {
       setLoggedIn(true);
@@ -45,20 +46,27 @@ const UserDashboard = ({ userDetails, walletBalance }) => {
     <div className="projects">
       <div className="container">
         <div className="row">
-          <div className="col-md-12">
-            <br />
-
-            <br />
-            <div className="card text-center">
-              <div className="card-header bg-secondary text-white">
-                <h1>Welcome {userDetails?.name}</h1>
-              </div>
+          <div className="row justify-content-center">
+            <div className="col-md-10">
+              <br />
+              {loggedIn ? (
+                <>
+                  <div className="card text-center">
+                    <div className="card-header bg-secondary text-white">
+                      <h2>Welcome {userDetails?.name}</h2>
+                    </div>
+                  </div>
+                  <hr />
+                  <DashboardItem userDetails={userDetails} />
+                </>
+              ) : (
+                <div className="card text-center">
+                  <div className="card-header bg-secondary text-white">
+                    <h2>Please login or register to continue</h2>
+                  </div>
+                </div>
+              )}
             </div>
-            <hr />
-
-            <DashboardItem userDetails={userDetails} />
-
-            {/* {setUserInfo(userDetails, walletBalance)} */}
           </div>
         </div>
       </div>

@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Form } from "react-bootstrap";
 
-const SendMoneyForm = ({ userDetails }) => {
-  const [senderId, setSenderId] = useState("");
+const SendMoneyForm = ({ userDetails, setOpenModal, onConfirm }) => {
   const [receiverId, setReceiverId] = useState();
   const [amount, setAmount] = useState(null);
-  const [cashback, setCashback] = useState("");
 
   const handleSubmit = (event) => {
     var accountNo = userDetails.accNo;
 
     const data = {
-      sid: accountNo,
-      rid: receiverId,
-      amount: amount,
+      senderId: accountNo,
+      receiverId: receiverId,
+      sendAmount: amount,
     };
     const jwtToken = userDetails.token;
     console.log(jwtToken);
@@ -29,16 +26,15 @@ const SendMoneyForm = ({ userDetails }) => {
 
     event.preventDefault();
     axios
-      .post("http://localhost:8080/users/send", data, { headers })
+      .post("http://localhost:8080/accounts/send", data, { headers })
       .then((response) => {
         if (response && response.status === 200) {
           console.log(response);
           console.log(response.data.cashback);
           toast.success(response.data.cashback);
           var cashb = response.data.cashback;
-          setCashback(cashb);
+          setOpenModal(false);
         }
-        // toast.success(cashb);
       })
       .catch((error) => {
         console.log(error);
@@ -50,9 +46,15 @@ const SendMoneyForm = ({ userDetails }) => {
 
   return (
     <>
-      <Form bg="dark" variant="dark" onSubmit={handleSubmit}>
-        <Form.Group className="mb-1">
-          <Form.Label>Receiver ID:</Form.Label>
+      <Form
+        bg="dark"
+        variant="dark"
+        onSubmit={handleSubmit}
+        className="text-start">
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <h5>Receiver Account No.</h5>
+          </Form.Label>
           <Form.Control
             type="text"
             id="receiverId"
@@ -60,8 +62,10 @@ const SendMoneyForm = ({ userDetails }) => {
             onChange={(event) => setReceiverId(event.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mb-1">
-          <Form.Label>Amount:</Form.Label>
+        <Form.Group className="mb-0">
+          <Form.Label>
+            <h5>Amount:</h5>
+          </Form.Label>
           <Form.Control
             type="text"
             id="amount"
@@ -71,6 +75,9 @@ const SendMoneyForm = ({ userDetails }) => {
         </Form.Group>
         <Button variant="primary" type="submit">
           Send
+        </Button>{" "}
+        <Button variant="outline-danger" onClick={onConfirm}>
+          Close
         </Button>
       </Form>
     </>

@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import SignInModel from "./Modals/SignInModal";
+import SignInModel from "./Modals/SignUpModal";
 import LoginModel from "./Modals/LoginModel";
 
 const NavigationBar = ({ handleUserInfo, userDetails }) => {
   const [uname, setUname] = useState("");
-  const [account, setAccount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [signModalShow, setSignModalShow] = useState(false);
 
   useEffect(() => {
     var name = userDetails?.name;
     setUname(name);
+
+    // console.log(userDetails.name);
     var acNo = userDetails?.accNo;
-    setAccount(acNo);
   }, [userDetails]);
 
   const Logout = () => {
@@ -48,25 +47,26 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
         </ul>
 
         <Navbar.Collapse className="justify-content-end">
-          {uname ? (
-            <DropdownButton id="dropdown-basic-button" title={uname}>
-              <Dropdown.Item onClick={Logout}>Logout</Dropdown.Item>
-            </DropdownButton>
-          ) : (
-            <>
-              <button
-                className="btn btn-outline-light mx-2"
-                onClick={() => setModalShow(true)}>
-                {uname ? uname : "Login"}
-              </button>
-              <button
-                className="btn btn-outline-light"
-                onClick={() => setSignModalShow(true)}>
-                {uname ? uname : "SignUp"}
-              </button>
-            </>
-          )}
-
+          <div className="d-flex justify-content-center align-items-center">
+            {uname ? (
+              <DropdownButton id="dropdown-basic-button" title={uname}>
+                <Dropdown.Item onClick={Logout}>Logout</Dropdown.Item>
+              </DropdownButton>
+            ) : (
+              <>
+                <button
+                  className="btn btn-outline-light mx-2"
+                  onClick={() => setModalShow(true)}>
+                  {uname ? uname : "Login"}
+                </button>
+                <button
+                  className="btn btn-outline-light"
+                  onClick={() => setSignModalShow(true)}>
+                  {uname ? uname : "Sign up"}
+                </button>
+              </>
+            )}
+          </div>
           <LoginModel
             handleUserInfo={(user) => {
               setUname(user.name);
@@ -79,14 +79,25 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
           <SignInModel
             handleUserInfo={(user) => {
               setUname(user.name);
-              console.log(user);
+              // console.log(user);
               handleUserInfo(user);
             }}
             show={signModalShow}
             onHide={() => setSignModalShow(false)}
           />
         </Navbar.Collapse>
-        <ToastContainer theme="dark" />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </div>
     </nav>
   );
