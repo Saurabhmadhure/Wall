@@ -52,6 +52,7 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
         `http://localhost:8080/accounts/${acNo}`,
         { headers }
       );
+      console.lg(response);
       setBalance(response.data.availableBalance);
       setShowDepositContainer(false);
       setBalanceAvailable(true);

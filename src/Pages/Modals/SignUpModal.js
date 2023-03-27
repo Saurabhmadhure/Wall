@@ -162,7 +162,11 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
             <Form.Control
               id="name"
               type="text"
+              pattern="[a-zA-Z]"
+              oninvalid="setCustomValidity('Please enter on alphabets only. ')"
+              class="form-control"
               placeholder="Enter Name"
+              onkeydown="return /[a-z]/i.test(event.key)"
               onChange={(e) => handleChange(e, "name")}
               value={user.name}
             />
