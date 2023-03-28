@@ -1,8 +1,6 @@
 import { render, fireEvent, screen, waitFor } from "@testing-library/react";
 import SignInModel from "../Pages/Modals/SignUpModal";
 
-jest.mock("axios");
-
 describe("SignInModel component", () => {
   test("renders Sign In Model component", () => {
     render(<SignInModel />);

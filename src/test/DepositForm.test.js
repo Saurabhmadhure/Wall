@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import DepositForm from "../Pages/Dashboard/Deposit";
+import axios from "axios";
 
 describe("DepositForm component", () => {
   const userDetails = {
@@ -8,8 +9,15 @@ describe("DepositForm component", () => {
     balance: 1000,
     token: "jwtToken",
   };
-
+  jest.mock("../Pages/Dashboard/Deposit");
+  jest.mock("../Pages/Dashboard/Deposit", () => ({
+    DepositForm: () => {
+      return <mock-DepositForm data-testid="DepositForm" />;
+    },
+  }));
+  jest.mock("axios");
   const handleDepositSuccess = jest.fn();
+  test();
 
   test("renders amount input and deposit button", () => {
     render(

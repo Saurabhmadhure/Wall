@@ -10,7 +10,12 @@ import { toast } from "react-toastify";
 import { doLogin } from "../../Component/Auth/Index";
 import axios from "axios";
 
-const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
+const SignInModel = ({
+  handleUserInfo,
+  handleOTPVerification,
+  onHide,
+  ...props
+}) => {
   const [otp, setOtp] = useState("");
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
@@ -24,10 +29,31 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
 
   console.log();
   const [error, setError] = useState();
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false,
+  });
+  // const isNameValid = (name) => {
+  //   const regex = /^[a-zA-Z\s]+$/;
+  //   return regex.test(name);
+  // };
+  // const showNameError =
+  //   touched.name && (!user.name.trim() || !isNameValid(user.name));
 
   const handleChange = (event, property) => {
-    setUser({ ...user, [property]: event.target.value });
+    if (property === "name") {
+      const regex = /^[a-zA-Z\s]*$/; // regex to allow only letters and spaces
+      if (regex.test(event.target.value)) {
+        setUser({ ...user, [property]: event.target.value });
+        setTouched({ ...touched, [property]: true });
+      }
+    } else {
+      setUser({ ...user, [property]: event.target.value });
+      setTouched({ ...touched, [property]: true });
+    }
   };
+
   const resetData = () => {
     setUser({
       name: "",
@@ -36,7 +62,9 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
       password: "",
     });
   };
-
+  // const value = event.target.value;
+  //     const regex = /^[A-Za-z]+$/;
+  //     if (regex.test(value)) {
   const submitData = async (event) => {
     event.preventDefault();
     try {
@@ -111,13 +139,14 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
         if (otpResponse.data === true) {
           console.log();
           toast.success("Succesfully Registered");
-
+          handleOTPVerification(true);
           setOtp("");
 
           handleUserInfo(userInfo);
           setShowOTPModal(false);
           onHide();
         } else {
+          handleOTPVerification(false);
           console.log({
             userEnteredOTP: otp,
             email: email,
@@ -162,14 +191,22 @@ const SignInModel = ({ handleUserInfo, onHide, ...props }) => {
             <Form.Control
               id="name"
               type="text"
-              pattern="[a-zA-Z]"
-              oninvalid="setCustomValidity('Please enter on alphabets only. ')"
               class="form-control"
+              // onBlur={(event) => handleBlur(event, "name")}
               placeholder="Enter Name"
-              onkeydown="return /[a-z]/i.test(event.key)"
               onChange={(e) => handleChange(e, "name")}
               value={user.name}
             />
+            {/* {!showNameError && (
+              <Form.Text className="text-muted">
+                Please enter your name
+              </Form.Text>
+            )}
+            {showNameError && (
+              <Form.Text className="text-danger">
+                Please enter a valid name (only alphabets are allowed)
+              </Form.Text>
+            )} */}
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Email address</Form.Label>

@@ -9,7 +9,8 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
   const [uname, setUname] = useState("");
   const [modalShow, setModalShow] = useState(false);
   const [signModalShow, setSignModalShow] = useState(false);
-
+  // const [islogin, setIsLogin] = useState(false);
+  const [isOTPVerified, setIsOTPVerified] = useState(false);
   useEffect(() => {
     var name = userDetails?.name;
     setUname(name);
@@ -23,6 +24,9 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
 
     window.location.href = "/";
     toast.success("Successfully Logged Out");
+  };
+  const handleOTPVerification = (isVerified) => {
+    setIsOTPVerified(isVerified);
   };
 
   localStorage.setItem("userName", uname);
@@ -68,6 +72,7 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
             )}
           </div>
           <LoginModel
+            handleOTPVerification={handleOTPVerification}
             handleUserInfo={(user) => {
               setUname(user.name);
 
@@ -77,6 +82,7 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
             onHide={() => setModalShow(false)}
           />
           <SignInModel
+            handleOTPVerification={handleOTPVerification}
             handleUserInfo={(user) => {
               setUname(user.name);
               // console.log(user);

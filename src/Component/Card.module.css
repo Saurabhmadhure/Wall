@@ -1,6 +1,6 @@
 .card {
   width: 100%;
-  /* max-width: 80rem; */
+  max-width: 105rem;
   margin: 0 auto;
   flex-wrap: wrap;
   padding: 2rem;

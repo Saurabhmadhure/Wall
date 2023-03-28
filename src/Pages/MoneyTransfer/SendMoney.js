@@ -4,7 +4,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Form } from "react-bootstrap";
 
-const SendMoneyForm = ({ userDetails, setOpenModal, onConfirm }) => {
+const SendMoneyForm = ({
+  userDetails,
+  setOpenModal,
+  onConfirm,
+  handleDepositSuccess,
+}) => {
   const [receiverId, setReceiverId] = useState();
   const [amount, setAmount] = useState(null);
 
@@ -30,6 +35,9 @@ const SendMoneyForm = ({ userDetails, setOpenModal, onConfirm }) => {
       .then((response) => {
         if (response && response.status === 200) {
           console.log(response);
+          console.log(response.data.senderAvailable_balance);
+          handleDepositSuccess(response.data.senderAvailable_balance);
+
           console.log(response.data.cashback);
           toast.success(response.data.cashback);
           var cashb = response.data.cashback;

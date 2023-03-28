@@ -19,7 +19,16 @@ const DepositForm = ({ userDetails, handleDepositSuccess }) => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setData({ ...data, [name]: value });
+    if (name === "amount") {
+      const regex = /^[0-9]*$/; // regex to allow only numbers
+      if (regex.test(value)) {
+        setData({ ...data, [name]: value });
+      } else {
+        setData({ ...data, [name]: "" }); // set the value to an empty string if it's not a number
+      }
+    } else {
+      setData({ ...data, [name]: value });
+    }
   };
 
   const amountVar = data.amount;

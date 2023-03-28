@@ -1,16 +1,17 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Base from "../Component/Base";
 import Card from "../Component/Card";
+import UserContext from "../Pages/Dashboard/UserContext";
 
 function OTP() {
   const [otp, setOtp] = useState("");
   const [showOtpForm, setShowOtpForm] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+  const { setUserInfo } = useContext(UserContext);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -41,6 +42,10 @@ function OTP() {
         console.log(otpResponse);
         if (otpResponse.data === true) {
           console.log();
+          setUserInfo((prevState) => ({
+            ...prevState,
+            verificationState: true,
+          }));
           toast.success("Succesfully Registered");
           navigate("/home");
           setOtp("");
@@ -97,7 +102,13 @@ function OTP() {
                   type="text"
                   placeholder="Enter Otp"
                   value={otp}
-                  onChange={(event) => setOtp(event.target.value)}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    const regex = /^[0-9]*$/;
+                    if (regex.test(value)) {
+                      setOtp(value);
+                    }
+                  }}
                 />
                 <Form.Text className="text-muted">Activate Account</Form.Text>
               </Form.Group>

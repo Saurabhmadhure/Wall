@@ -1,13 +1,21 @@
-import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { toast, ToastContainer } from "react-toastify";
 import Card from "../../Component/Card";
-import { loginUser } from "../../Services/user-Service";
+import React, { useContext } from "react";
+import UserContext, { MyContext } from "../../Pages/Dashboard/UserContext";
 
-const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
+import { loginUser } from "../../Services/user-Service";
+import context from "react-bootstrap/esm/AccordionContext";
+
+const LoginModel = ({
+  handleOTPVerification,
+  handleUserInfo,
+  onHide,
+  ...props
+}) => {
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -20,7 +28,7 @@ const LoginModel = ({ handleUserInfo, onHide, ...props }) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-
+    const { handleOTPVerification } = context;
     if (data.email.trim().length === 0) {
       toast.error("Email is Empty");
       return;

@@ -52,7 +52,6 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
         `http://localhost:8080/accounts/${acNo}`,
         { headers }
       );
-      console.lg(response);
       setBalance(response.data.availableBalance);
       setShowDepositContainer(false);
       setBalanceAvailable(true);
@@ -162,6 +161,7 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
               <br />
               <SendMoneyForm
                 onConfirm={errorHandler}
+                handleDepositSuccess={handleDepositSuccess}
                 setOpenModal={setModalOpen}
                 userDetails={userDetails}>
                 Send Money
