@@ -3,25 +3,35 @@ import { Outlet } from "react-router-dom";
 import Base from "../Component/Base";
 import UserDashboard from "./Dashboard/UserDashBoard";
 
-const Home = () => {
+const Home = ({ userData }) => {
   const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (userData) {
+      localStorage.setItem("userData", JSON.stringify(userData));
+    }
+  }, [userData]);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
     if (userInfoFromStorage) {
       setUserInfo(JSON.parse(userInfoFromStorage));
+    } else {
+      const userDataFromStorage = localStorage.getItem("userData");
+      if (userDataFromStorage) {
+        setUserInfo(JSON.parse(userDataFromStorage));
+      }
     }
   }, []);
 
-  useEffect(() => {
-    if (userInfo) {
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-    }
-  }, [userInfo]);
-
   const handleUserInfo = (data) => {
-    setUserInfo(data);
+    const userDataFromStorage = JSON.parse(localStorage.getItem("userData"));
+    const userData = data || userDataFromStorage;
+
+    localStorage.setItem("userInfo", JSON.stringify(userData));
+    setUserInfo(userData);
   };
+
   return (
     <>
       <Base handleUserInfo={handleUserInfo} userDetails={userInfo} />

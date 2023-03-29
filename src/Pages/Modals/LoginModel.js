@@ -6,12 +6,15 @@ import { toast, ToastContainer } from "react-toastify";
 import Card from "../../Component/Card";
 import React, { useContext } from "react";
 import UserContext, { MyContext } from "../../Pages/Dashboard/UserContext";
+import { useNavigate } from "react-router-dom";
 
 import { loginUser } from "../../Services/user-Service";
 import context from "react-bootstrap/esm/AccordionContext";
+import OTP from "../OTP";
 
 const LoginModel = ({
   handleOTPVerification,
+  isOTPVerified,
   handleUserInfo,
   onHide,
   ...props
@@ -20,15 +23,21 @@ const LoginModel = ({
     email: "",
     password: "",
   });
+  // const [loginResponseData, setLoginResponseData] = useState(null);
   const [modalShow, setModalShow] = useState(false);
+  const [otpStatus, setOtpStatus] = useState(false);
+  const tempOtpVerifiedFlag = localStorage.getItem("otpVerification");
 
   const handleChange = (event, field) => {
     setData({ ...data, [field]: event.target.value });
   };
+  const otpStatusFromModal = (otpdata) => {
+    setOtpStatus(otpdata);
+  };
+  const navigate = useNavigate();
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    const { handleOTPVerification } = context;
     if (data.email.trim().length === 0) {
       toast.error("Email is Empty");
       return;
@@ -37,20 +46,43 @@ const LoginModel = ({
       toast.error("Password is Empty");
       return;
     }
-
     loginUser(data)
       .then((jwtTokenData) => {
         // doLogin(jwtTokenData, () => {});
-
+        // console.log(jwtTokenData);
         var token = jwtTokenData;
-
+        // console.log(token);
+        // console.log(isOTPVerified);
+        // setLoginResponseData(token);
         handleUserInfo(token);
+
         localStorage.setItem("tokens", token?.token);
         localStorage.setItem("userName", token.name);
+        localStorage.setItem("tokens", token.token);
+        localStorage.setItem("accounts", token?.accNo);
+        localStorage.setItem("email", token.email);
+        localStorage.setItem("name", token.name);
+        localStorage.setItem("userData", JSON.stringify(token));
+
         toast.success("Succesfully Logged in");
         localStorage.setItem("accounts", token?.accNo);
         setData({ email: "", password: "" });
         handleModalClose();
+        // const tempOtpVerifiedFlag = localStorage.getItem("otpVerification");
+        // console.log(isOTPVerified);
+        // if (isOTPVerified || tempOtpVerifiedFlag === true) {
+        //   navigate("home");
+        // }
+        // // else {
+        // //   navigate("/home/otp");
+        // // }
+        const tempOtpVerifiedFlag = localStorage.getItem("otpVerification");
+        console.log(isOTPVerified);
+        if (isOTPVerified || Boolean(tempOtpVerifiedFlag)) {
+          navigate("/home");
+        } else {
+          navigate("otp");
+        }
       })
       .catch((error) => {
         if (error.response.status === 403 || error.response.status === 400) {
@@ -122,6 +154,14 @@ const LoginModel = ({
           pauseOnHover
           theme="dark"
         />
+        {/* {!isOTPVerified ||
+          (!tempOtpVerifiedFlag && (
+            <OTP
+              onHide={handleModalClose}
+              isOTPVerified={isOTPVerified}
+              handleOTPVerification={handleOTPVerification}
+            />
+          ))} */}
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={onHide}>Close</Button>

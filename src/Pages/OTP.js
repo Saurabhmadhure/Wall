@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
@@ -8,18 +9,11 @@ import Base from "../Component/Base";
 import Card from "../Component/Card";
 import UserContext from "../Pages/Dashboard/UserContext";
 
-function OTP() {
+const OTP = ({ handleOTPVerification }) => {
   const [otp, setOtp] = useState("");
   const [showOtpForm, setShowOtpForm] = useState(false);
   const { setUserInfo } = useContext(UserContext);
 
-  useEffect(() => {
-    const userInfoFromStorage = localStorage.getItem("userInfo");
-    if (userInfoFromStorage) {
-      setUserInfo(JSON.parse(userInfoFromStorage));
-      console.log(userInfoFromStorage);
-    }
-  }, []);
   const handleUserInfo = (data) => {
     setUserInfo(data);
   };
@@ -30,6 +24,7 @@ function OTP() {
   };
   const handleOtpSubmit = (event) => {
     event.preventDefault();
+    console.log(handleOTPVerification);
     var email = localStorage.getItem("email");
 
     console.log(otp);
@@ -42,10 +37,9 @@ function OTP() {
         console.log(otpResponse);
         if (otpResponse.data === true) {
           console.log();
-          setUserInfo((prevState) => ({
-            ...prevState,
-            verificationState: true,
-          }));
+          localStorage.setItem("otpVerification", true);
+          // handleOTPVerification(true);
+
           toast.success("Succesfully Registered");
           navigate("/home");
           setOtp("");
@@ -91,37 +85,51 @@ function OTP() {
           </div>
         )}
         {showOtpForm && (
-          <Card>
-            <h1 align="center">Activate Your Account</h1>
-            <Form bg="dark" variant="dark" onSubmit={handleOtpSubmit}>
-              <Form.Group className="mb-1">
-                <Form.Label>
-                  Insert OTP Enter Otp Received on Registered mail
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Otp"
-                  value={otp}
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    const regex = /^[0-9]*$/;
-                    if (regex.test(value)) {
-                      setOtp(value);
-                    }
-                  }}
-                />
-                <Form.Text className="text-muted">Activate Account</Form.Text>
-              </Form.Group>
+          <div className="projects">
+            <div className="container">
+              <div className="row">
+                <div className="row justify-content-center">
+                  <div className="col-md-1"></div>
+                  <Container>
+                    <Card>
+                      <h1 align="center">Activate Your Account</h1>
+                      <br />
+                      <Form bg="dark" variant="dark" onSubmit={handleOtpSubmit}>
+                        <Form.Group className="mb-1">
+                          <Form.Label>
+                            Insert OTP received on registered mail
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Enter Otp"
+                            value={otp}
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              const regex = /^[0-9]*$/;
+                              if (regex.test(value)) {
+                                setOtp(value);
+                              }
+                            }}
+                          />
+                          <Form.Text className="text-muted">
+                            Activate Account
+                          </Form.Text>
+                        </Form.Group>
 
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
-            </Form>
-          </Card>
+                        <Button variant="primary" type="submit">
+                          Submit
+                        </Button>
+                      </Form>
+                    </Card>
+                  </Container>
+                </div>
+              </div>{" "}
+            </div>{" "}
+          </div>
         )}
       </div>
     </>
   );
-}
+};
 
 export default OTP;

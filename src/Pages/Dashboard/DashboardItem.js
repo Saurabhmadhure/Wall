@@ -88,6 +88,9 @@ const DashboardItem = ({ userDetails, handleBalance }) => {
       balAvailable();
     }
   }, [userDetails]);
+  useEffect(() => {
+    localStorage.setItem("balance", balance);
+  });
   const handleDepositSuccess = (data) => {
     setBalance(data);
   };

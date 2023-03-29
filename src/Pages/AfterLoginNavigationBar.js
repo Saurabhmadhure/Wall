@@ -14,14 +14,15 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
   useEffect(() => {
     var name = userDetails?.name;
     setUname(name);
-
+    // console.log(handleOTPVerification);
     // console.log(userDetails.name);
     var acNo = userDetails?.accNo;
   }, [userDetails]);
-
+  // console.log(userDetails);
   const Logout = () => {
+    const otpVerification = localStorage.getItem("otpVerification");
     localStorage.clear();
-
+    localStorage.setItem("otpVerification", otpVerification);
     window.location.href = "/";
     toast.success("Successfully Logged Out");
   };
@@ -31,7 +32,8 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
 
   localStorage.setItem("userName", uname);
   useEffect(() => {
-    const savedName = localStorage.getItem("userName");
+    const savedName =
+      localStorage.getItem("userName") || localStorage.getItem("name");
     if (savedName) {
       setUname(savedName);
     }
@@ -78,6 +80,7 @@ const NavigationBar = ({ handleUserInfo, userDetails }) => {
 
               handleUserInfo(user);
             }}
+            isOTPVerified={isOTPVerified}
             show={modalShow}
             onHide={() => setModalShow(false)}
           />

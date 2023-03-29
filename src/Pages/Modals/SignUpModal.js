@@ -92,6 +92,7 @@ const SignInModel = ({
             localStorage.setItem("accounts", response?.accNo);
             localStorage.setItem("email", response.email);
             localStorage.setItem("name", response.name);
+            localStorage.setItem("response", response);
             setUserInfo(response);
             setEmail(response.email);
 
@@ -139,6 +140,7 @@ const SignInModel = ({
         if (otpResponse.data === true) {
           console.log();
           toast.success("Succesfully Registered");
+          localStorage.setItem("otpVerification", true);
           handleOTPVerification(true);
           setOtp("");
 
@@ -146,7 +148,9 @@ const SignInModel = ({
           setShowOTPModal(false);
           onHide();
         } else {
+          localStorage.setItem("otpVerification", false);
           handleOTPVerification(false);
+
           console.log({
             userEnteredOTP: otp,
             email: email,
@@ -218,7 +222,6 @@ const SignInModel = ({
               value={user.email}
             />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -229,10 +232,9 @@ const SignInModel = ({
               value={user.password}
             />
           </Form.Group>
-
           <Button variant="primary" type="submit">
             Submit
-          </Button>
+          </Button>{" "}
           <Button variant="danger" type="reset" onClick={resetData}>
             Reset
           </Button>
